@@ -1,0 +1,154 @@
+CREATE DATABASE visonity
+    |> Creates a new database
+
+DROP DATABASE visonity
+    |> Deletes an existing database
+
+
+
+CREATE TABLE users (
+id INT NOT NULL AUTO_INCREMENT,
+username VARCHAR(255),
+pass VARCHAR(255),
+city VARCHAR(255),
+score INT,
+PRIMARY KEY(id) );
+    |> Creates a new table
+
+DROP TABLE users
+    |> Deletes an existing table
+
+
+
+The SELECT statement is used to query the database and fetch data
+
+    SELECT username FROM users 
+
+    SELECT * FROM users
+
+
+    SELECT username FROM users WHERE username="visonn336"
+        |> WHERE statement returns values that match the condition
+
+    SELECT username FROM users WHERE pass IS NULL
+        |> IS NULL operator is used to find NULL values
+
+    SELECT username FROM users WHERE pass IS NOT NULL
+        |> IS NOT NULL operator is used to find NOT NULL values
+
+    SELECT username FROM users WHERE city IN ('Baku', 'Ankara', 'Heaven')
+        |> IN operator is used to multiple values inside the where clause
+
+    SELECT username FROM users WHERE score BETWEEN 350 AND 500 ( WHERE score > / < / = / >= / <= 400)
+        |> BETWEEN operator is used to select a value within the specified range
+
+    SELECT U.username FROM users AS U
+        |> AS operator is used to rename table or column
+
+
+        SELECT username FROM users WHERE username="visonn336" AND pass="********"
+            |> AND operator returns values if all the conditions are TRUE
+
+        SELECT username FROM users WHERE NOT username="visonn336"
+            |> NOT operator returns values if condition NOT TRUE
+
+        SELECT username FROM users WHERE username="visonn336" OR username="zidelsa"
+            |> OR operator returns values if any of the condition is TRUE
+
+        SELECT username FROM users WHERE username LIKE "v%" / "vison _ _ "
+            |> LIKE operator is used to select values with the specified characters 
+                |> % addition is denotes zero or many characters
+                |> _ addition is denotes one character
+
+
+            SELECT COUNT(id) FROM users
+                |> COUNT operator returns the number of rows of the selected column
+
+            SELECT AVG(score) FROM users
+                |> AVG operator returns the average value of a numeric column
+
+            SELECT SUM(score) FROM users
+                |> SUM operator returns the total sum of a numeric column
+
+            SELECT MIN(score) FROM users
+                |> MIN operator returns the smallest value of the selected column
+
+            SELECT MAX(score) FROM users
+                |> MAX operator returns the largest value of the selected column        
+
+
+
+INSERT INTO users (username, pass) VALUES ("visonn336", "********", "Baku", 520)
+    |> INSERT INTO operator is used for to insert new data into a table
+
+
+
+GROUP BY operator is used to group rows that have same values
+
+    =================Employees=================
+    EmployeeID  FirstName  LastName  Department
+    1           John       Doe       Sales
+    2           Jane       Smith     Sales
+    3           Sam        Brown     HR
+    4           Sue        Green     HR
+    5           Mike       White     IT
+
+        SELECT Department, COUNT(*) FROM Employees GROUP BY Department
+
+            Department  COUNT(*)  
+            Sales       2       
+            HR          2      
+            IT          1        
+
+
+
+    ===========Orders==========
+    OrderID  CustomerID  Amount
+    1        101         200
+    2        102         150
+    3        101         100
+    4        103         300
+    5        102         250
+
+        SELECT CustomerID, SUM(Amount) AS TotalAmount FROM Orders GROUP BY CustomerID
+
+                CustomerID  TotalAmount
+                101         300
+                102         400
+                103         300
+
+
+
+        HAVING operator is similar WHERE operator
+
+            SELECT CustomerID, SUM(Amount) AS TotalAmount FROM Orders GROUP BY CustomerID HAVING SUM(Amount) > 350
+
+                    CustomerID  TotalAmount
+                    102         400
+
+
+
+SELECT * FROM users ORDER BY score
+    |> ORDER BY operator is used to sort the result in ascending order
+
+SELECT * FROM users ORDER BY score DESC
+    |> DESC addition is used to sort the result in descending order
+
+
+
+UPDATE users SET username="Vison36" WHERE username="visonn336"
+    |> UPDATE operator is used to modify rows in a table
+
+DELETE FROM users WHERE id=2
+    |> DELETE operator is used to DELETE rows in a table
+
+
+
+The CASE statement is used to create conditions. If the value of city is 'Baku', then the result is 'Azerbaijan'.
+
+    SELECT CASE(city)
+        WHEN "Baku" Then "Azerbaijan"
+        WHEN "Ankara" Then "Türkiye"
+        ELSE "Heaven"
+    END AS capital
+    FROM users

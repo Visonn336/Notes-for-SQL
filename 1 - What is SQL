@@ -1,0 +1,65 @@
+SQL -> Structured Query Language
+
+    SQL was developed at IBM by Donald D. Chamberlin and Raymond F. Boyce in the early 1970s.
+    it was called SEQUEL ( Structured English QUEry Language )
+
+
+DDL -> Data Definition Language
+
+    Deals with database schemas and descriptions, of how the data should reside in the database.
+
+    For Example:
+        CREATE DATABASE
+        CREATE TABLE
+        ALTER TABLE
+        ALTER COLUMN
+        DROP DATABASE
+        DROP TABLE
+
+
+DCL -> Data Control language
+
+    it includes commands such as GRANT and mostly concerned with rights, permissions and other controls of the database system.
+
+    DCL commands are used to control access to data in the database. These commands are essential for
+    database security and managing user permissions. The two main DCL commands are:
+
+        GRANT: Gives users access privileges to the database.
+        REVOKE: Removes access privileges from users.
+
+
+DML -> Data Manipulation Language 
+
+    DML commands are used to manage and manipulate data within database tables. The primary DML commands include:
+
+        SELECT: Retrieves data from one or more tables.
+        INSERT: Adds new rows to a table.
+        UPDATE: Modifies existing rows in a table.
+        DELETE: Removes rows from a table.
+
+
+TCL -> Transaction Control Language
+
+    TCL commands manage transactions within a database. A transaction is a sequence of one or more SQL operations
+    treated as a single unit. The primary TCL commands are:
+
+        BEGIN TRANSACTION: Starts a new transaction.
+        COMMIT: Saves the changes made by the transaction permanently.
+        ROLLBACK: Undoes the changes made by the transaction.
+        SAVEPOINT: Sets a point within a transaction to which you can later roll back.
+        SET TRANSACTION: Sets the properties for a transaction.
+
+
+Some Popular Databases
+    Distributed Database
+    Object Oriented Database
+    Centralized Database
+    Operational Database
+    Graph Database
+    NoSQL Database
+    Cloud Database
+    Relational Database
+
+
+
+Source - youtube.com/live/q_JsgpiuY98?si=_iNy25he7gkORMQB

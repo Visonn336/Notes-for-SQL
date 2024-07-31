@@ -1,0 +1,381 @@
+What are Joins
+
+    JOINS in SQL are commands which are used to combine rows from two or more tables,
+    based on a related column between those tables. 
+    They are predominantly used when a user is trying to extract data from tables
+    which have one-to-many or many-to-many relationships between them.
+
+
+
+One-to-Many Relationship
+
+    In a one-to-many relationship, one record in a table (the “one” side) can be related to 
+    multiple records in another table (the “many” side).
+
+    Example: Consider a database for a library:
+
+        Authors: Each author can write multiple books.
+        Books: Each book is written by a single author.
+
+
+
+Many-to-Many Relationship
+
+    In a many-to-many relationship, multiple records in one table can be related to multiple records in another table.
+
+    Example: Consider a database for a school:
+
+        Students: Each student can enroll in multiple courses.
+        Courses: Each course can have multiple students enrolled.
+
+
+
+Types of Joins
+
+    INNER JOIN
+
+        Returns only the rows where there is a match in both tables.
+
+        Example:
+
+            Employees : Employee details.
+            -------------------
+            EmployeeID | Name       | DepartmentID
+            1          | Alice      | 10
+            2          | Bob        | 20
+            3          | Charlie    | NULL
+
+
+            Departments : Department details.
+            -------------------
+            DepartmentID | DepartmentName
+            10           | Sales
+            20           | HR
+            30           | IT
+
+
+            SELECT * FROM Employees INNER JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID
+
+                EmployeeID | Name    | DepartmentID | DepartmentID | DepartmentName
+                1          | Alice   | 10           | 10           | Sales
+                2          | Bob     | 20           | 20           | HR
+
+
+
+    NATURAL JOIN
+
+        Returns rows with matching values in the columns with the same name in both tables.
+        If there are no columns with the same name, it behaves like a Cartesian product (cross join).
+
+        Example:
+
+            SELECT * FROM Employees NATURAL JOIN Departments
+
+                EmployeeID | Name    | DepartmentID | DepartmentName
+                1          | Alice   | 10           | Sales
+                2          | Bob     | 20           | HR
+
+
+
+
+    LEFT JOIN (or LEFT OUTER JOIN)
+
+        Returns all rows from the left table, and matched rows from the right table.
+        If there is no match, NULL values are returned for columns from the right table.
+
+        Example:
+
+            SELECT * FROM Employees LEFT JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID
+
+                EmployeeID | Name    | DepartmentID | DepartmentID | DepartmentName
+                1          | Alice   | 10           | 10           | Sales
+                2          | Bob     | 20           | 20           | HR
+                3          | Charlie | NULL         | NULL         | NULL
+
+
+
+
+    RIGHT JOIN (or RIGHT OUTER JOIN)
+
+        Returns all rows from the right table, and matched rows from the left table.
+        If there is no match, NULL values are returned for columns from the left table.
+
+        Example:
+
+            SELECT * FROM Employees RIGHT JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID
+
+                EmployeeID | Name    | DepartmentID | DepartmentID | DepartmentName
+                1          | Alice   | 10           | 10           | Sales
+                2          | Bob     | 20           | 20           | HR
+                NULL       | NULL    | NULL         | 30           | IT
+
+
+
+
+    FULL JOIN (or FULL OUTER JOIN)
+
+        Returns all rows when there is a match in one of the tables. It combines the results of both LEFT JOIN and RIGHT JOIN.
+
+        Example:
+
+            SELECT * FROM Employees FULL JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID
+
+                EmployeeID | Name    | DepartmentID | DepartmentID | DepartmentName
+                1          | Alice   | 10           | 10           | Sales
+                2          | Bob     | 20           | 20           | HR
+                3          | Charlie | NULL         | NULL         | NULL
+                NULL       | NULL    | NULL         | 30           | IT
+
+
+
+
+    Summary of Types of Joins
+
+        INNER JOIN: Returns only matching rows from both tables.
+
+        NATURAL JOIN: Automatically joins tables based on columns with the same name and compatible data types,
+                        eliminating the need to specify the join condition explicitly.
+
+        LEFT JOIN: Returns all rows from the left table and matched rows from the right table.
+                    Non-matching rows from the right table will show NULL.
+
+        RIGHT JOIN: Returns all rows from the right table and matched rows from the left table.
+                    Non-matching rows from the left table will show NULL.
+
+        FULL JOIN: Returns all rows when there is a match in one of the tables.
+                    Combines results from both LEFT JOIN and RIGHT JOIN.
+
+
+
+How to map many-to-many relationships using 2 Join statements?
+
+    Example Scenario:
+
+        Consider a school database where students can enroll in multiple courses, and each course can have multiple students.
+
+        Students: Contains student information.
+        -------------------
+        StudentID | Name
+        1         | Alice
+        2         | Bob
+
+
+        Courses: Contains course information.
+        -------------------
+        CourseID  | CourseName
+        1         | Math
+        2         | Science
+
+
+        Enrollments: Junction table that connects students and courses.
+        -------------------
+        StudentID | CourseID
+        1         | 1
+        1         | 2
+        2         | 2
+
+
+        SELECT Students.StudentID, Students.Name, Courses.CourseID, Courses.CourseName
+        FROM Students
+        JOIN Enrollments ON Students.StudentID = Enrollments.StudentID
+        JOIN Courses ON Enrollments.CourseID = Courses.CourseID
+
+            StudentID | Name  | CourseID | CourseName
+            1         | Alice | 1        | Math
+            1         | Alice | 2        | Science
+            2         | Bob   | 2        | Science
+
+        OR
+
+        SELECT Courses.CourseID, Courses.CourseName, Students.StudentID, Students.Name
+        FROM Courses
+        JOIN Enrollments ON Courses.CourseID = Enrollments.CourseID
+        JOIN Students ON Enrollments.StudentID = Students.StudentID;
+
+            CourseID | CourseName | StudentID | Name
+            1        | Math       | 1         | Alice
+            2        | Science    | 1         | Alice
+            2        | Science    | 2         | Bob
+
+
+
+    Summary
+    
+        Many-to-Many Relationship: Managed using a junction table (Enrollments) with foreign keys pointing
+                                    to the primary keys of the related tables (Students and Courses).
+
+        Joining Tables: Use two JOIN statements to link the junction table with the related tables to retrieve the desired information.
+
+
+
+What is a Hash Join?
+
+    A Hash Join is a type of join algorithm used in relational database management systems (RDBMS) to join two tables.
+    It is particularly efficient for joining large tables when there are no pre-existing indexes on the join columns.
+
+    How a Hash Join Works?
+
+        A Hash Join operates in two phases: the Build Phase and the Probe Phase.
+
+            Build Phase:
+
+                The database chooses one of the tables as the build input (usually the smaller table).
+                It scans this table and creates a hash table in memory.
+                The hash table uses the join key(s) as the hash key and stores the rows in buckets based
+                on the hash function applied to the join key(s).
+
+
+            Probe Phase:
+
+                The database then scans the other table (the probe input).
+                For each row in the probe input, it applies the same hash function to the join key(s) and
+                looks up the hash table created in the Build Phase.
+                If a match is found in the hash table, the row is included in the result set.
+
+
+
+    Example
+
+        Employees:
+        ---------------
+        EmployeeID | Name       | DepartmentID
+        1          | Alice      | 10
+        2          | Bob        | 20
+        3          | Charlie    | 30
+
+
+        Departments
+        ---------------
+        DepartmentID | DepartmentName
+        10           | Sales
+        20           | HR
+        30           | IT
+
+
+        SELECT * FROM Employees JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID;
+
+        Steps of Hash Join:
+
+            Build Phase:
+
+                The database scans the Departments table (assuming it chooses the smaller table as the build input).
+
+                It creates a hash table in memory with DepartmentID as the key:
+
+                    Hash Table:
+                    10 -> {DepartmentID: 10, DepartmentName: Sales}
+                    20 -> {DepartmentID: 20, DepartmentName: HR}
+                    30 -> {DepartmentID: 30, DepartmentName: IT}
+
+
+            Probe Phase:
+
+                The database scans the Employees table (the probe input).
+
+                For each DepartmentID in Employees, it checks the hash table for a matching DepartmentID:
+
+                    EmployeeID 1, DepartmentID 10: Finds match in hash table → Alice, Sales
+                    EmployeeID 2, DepartmentID 20: Finds match in hash table → Bob, HR
+                    EmployeeID 3, DepartmentID 30: Finds match in hash table → Charlie, IT
+
+
+            Result:
+
+                EmployeeID | Name    | DepartmentID | DepartmentID | DepartmentName
+                1          | Alice   | 10           | 10           | Sales
+                2          | Bob     | 20           | 20           | HR
+                3          | Charlie | 30           | 30           | IT
+
+
+
+    Advantages of Hash Join
+
+        Efficiency: Particularly effective for large, unsorted, and unindexed tables.
+
+        Scalability: Handles large data sets efficiently, especially when tables do not fit into memory entirely.
+
+    
+    Disadvantages of Hash Join
+
+        Memory Usage: Requires sufficient memory to store the hash table.
+        If the hash table is too large to fit into memory, performance can degrade.
+
+        Initial Overhead: Building the hash table requires an initial scan of the build input,
+        which can be costly for very large tables.
+
+
+
+    Summary
+        A Hash Join is a powerful join algorithm used to efficiently join large tables by creating a hash table based on the
+        join key of one table and probing it with the join key from the other table.
+        It is particularly useful when dealing with large datasets where traditional nested loop joins would be inefficient.
+
+
+
+What is Self & Cross Join?
+
+    Self Join:
+
+        A Self Join is a regular join, but the table is joined with itself. This is useful when you want to compare rows within the same table or create hierarchical relationships within the data.
+
+        Example Scenario:
+
+            Consider an Employees table that includes each employee's manager.
+
+            Employees
+            ---------------------
+            EmployeeID | Name     | ManagerID
+            1          | Alice    | NULL
+            2          | Bob      | 1
+            3          | Charlie  | 1
+            4          | Dave     | 2
+
+
+            SELECT e1.EmployeeID, e1.Name AS EmployeeName, e2.Name AS ManagerName
+            FROM Employees e1
+            LEFT JOIN Employees e2 ON e1.ManagerID = e2.EmployeeID;
+
+                EmployeeID | EmployeeName | ManagerName
+                1          | Alice        | NULL
+                2          | Bob          | Alice
+                3          | Charlie      | Alice
+                4          | Dave         | Bob
+
+
+
+    Cross Join:
+
+        A Cross Join produces the Cartesian product of the two tables involved in the join.
+        This means every row from the first table is paired with every row from the second table.
+
+        Example Scenario:
+
+            Consider two small tables, Colors and Sizes.
+
+            Colors
+            -------------
+            ColorID | ColorName
+            1       | Red
+            2       | Blue
+
+
+            Sizes
+            -------------
+            SizeID | SizeName
+            1      | Small
+            2      | Medium
+            3      | Large
+
+            Cross Join Query:
+
+                To get all combinations of colors and sizes
+
+                SELECT * FROM Colors CROSS JOIN Sizes
+
+                    ColorID | ColorName | SizeID | SizeName
+                    1       | Red       | 1      | Small
+                    1       | Red       | 2      | Medium
+                    1       | Red       | 3      | Large
+                    2       | Blue      | 1      | Small
+                    2       | Blue      | 2      | Medium
+                    2       | Blue      | 3      | Large

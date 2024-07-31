@@ -1,0 +1,92 @@
+What is NoSQL:
+
+    NoSQL (Not Only SQL) databases are a category of databases that offer alternatives to the
+    traditional relational databases (SQL databases).
+    They are designed to handle a wide variety of data models and are often used for large-scale and real-time applications.
+
+
+
+Key Features of NoSQL Databases
+
+    Flexible Schema:
+
+        Unlike SQL databases with rigid schemas, NoSQL databases can handle unstructured or
+        semi-structured data and allow changes to the schema without disrupting operations.
+
+    Scalability:
+
+        NoSQL databases are designed to scale out by distributing data across multiple servers,
+        making them well-suited for handling large volumes of data and high traffic.
+
+    Variety of Data Models:
+
+        NoSQL databases support various data models, including key-value, document, column-family, and graph.
+
+    Performance:
+
+        They are optimized for high performance, particularly for read and write operations on large datasets.
+
+    High Availability:
+
+        Many NoSQL databases are designed for high availability and can continue to operate even if some nodes fail.
+
+
+
+Types of NoSQL Databases:
+
+    Key-Value Stores:
+
+        Description: Stores data as key-value pairs.
+        Example: Redis, DynamoDB
+        Use Case: Caching, session storage
+
+            SET key = "user:1";
+            SET value = "{ 'name': 'John', 'age': 30 }";
+
+    
+    Document Stores:
+
+        Description: Stores data in documents, usually in JSON or BSON format.
+        Example: MongoDB, CouchDB
+        Use Case: Content management systems, user profiles
+
+            {
+            "name": "John",
+            "age": 30,
+            "email": "john@example.com"
+            }
+
+
+    Column-Family Stores:
+
+        Description: Stores data in columns rather than rows, which allows for efficient retrieval and storage of large datasets.
+        Example: Apache Cassandra, HBase
+        Use Case: Real-time analytics, large-scale data storage
+
+            Column Family: Users
+            Row Key: user1
+            Column1: name = "John"
+            Column2: age = 30
+
+
+    Graph Databases:
+
+        Description: Stores data as nodes, edges, and properties, designed to represent and query relationships between data.
+        Example: Neo4j, ArangoDB
+        Use Case: Social networks, recommendation engines
+
+            Node: Person (Name: John)
+            Edge: FRIENDS_WITH
+            Node: Person (Name: Jane)
+
+
+
+When to Use NoSQL Databases?
+
+    Large Scale Data: When you need to handle huge volumes of data that may not fit well into a traditional relational model.
+
+    Flexible Data Models: When your data structure may evolve over time or differs widely across records.
+
+    High Throughput and Low Latency: When you require high performance for read and write operations.
+    
+    Real-Time Analytics: When you need to analyze data quickly and in real-time.

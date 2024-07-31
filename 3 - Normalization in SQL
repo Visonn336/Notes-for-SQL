@@ -1,0 +1,232 @@
+What is Normalization
+
+    Normalization in SQL is a way to organize data in a database to reduce duplication and make the data more consistent and reliable.
+
+
+
+Anomalies are problems that can occur in a database when data is not properly organized.
+The types of anomalies that normalization aims to prevent.
+
+    Insertion
+
+        An insertion anomaly occurs when you cannot add data to the database due to missing other required data.
+        
+        | EmployeeID | EmployeeName | Department |
+        |------------|--------------|------------|
+        | 1          | John         | Sales      |
+        | 2          | Jane         | HR         |
+
+        If you want to add a new department but don't have any employees to add to it, you can't insert the department alone.
+
+
+    Updation
+
+        An update anomaly occurs when changes to data require multiple rows to be updated, leading to possible mistakes.
+
+        | EmployeeID | EmployeeName | Department |
+        |------------|--------------|------------|
+        | 1          | John         | Sales      |
+        | 2          | Jane         | Sales      |
+
+        If the department name "Sales" needs to be changed to "Marketing," you must update all rows where the department is "Sales."
+        If you miss any row, data will be inconsistent.
+
+
+    Deletion
+
+        A deletion anomaly occurs when deleting data results in unintended loss of additional data.
+
+        | EmployeeID | EmployeeName | Department |
+        |------------|--------------|------------|
+        | 1          | John         | Sales      |
+        | 2          | Jane         | HR         |
+
+        If you delete the row for Jane, you lose the information that the "HR" department exists,
+        which might be necessary for the organization.
+
+    
+    To avoid insertion anomalies, create separate tables for employees and departments.
+    To avoid update anomalies, ensure that department information is stored in only one place.
+    To avoid deletion anomalies, maintain department information in a separate table from employee information.
+    Example of Normalized Tables.
+
+        ==============Employee Table================
+        |                                          |
+        | EmployeeID | EmployeeName | DepartmentID |
+        |------------|--------------|--------------|
+        | 1          | John         | 1            |
+        | 2          | Jane         | 2            |
+
+
+        ========Department Table=========
+        |                               |
+        | DepartmentID | DepartmentName |
+        |--------------|----------------|
+        | 1            | Sales          |
+        | 2            | HR             |
+
+
+        By organizing the data in this way, you can:
+
+            Add new departments without needing employee data (avoiding insertion anomalies).
+            Update department names in one place (avoiding update anomalies).
+            Delete employees without losing department information (avoiding deletion anomalies).
+
+
+
+Normalization consists of a series of rules (normal forms) used to organize database tables
+to reduce redundancy and improve data integrity.
+
+    First Normal Form (1NF)
+    Requirements:
+
+        Each column should contain atomic (indivisible) values.
+        Each column should contain values of the same type.
+        Each column must have a unique name.
+        The order in which data is stored does not matter.
+
+        Example:
+
+            Consider a table with a list of orders that violates 1NF:
+
+            | OrderID | CustomerName | Products        |
+            |---------|--------------|-----------------|
+            | 1       | Alice        | Apples, Bananas |
+            | 2       | Bob          | Oranges         |
+
+
+            To convert it to 1NF:
+
+            | OrderID | CustomerName | Product  |
+            |---------|--------------|----------|
+            | 1       | Alice        | Apples   |
+            | 1       | Alice        | Bananas  |
+            | 2       | Bob          | Oranges  |
+
+
+
+    Second Normal Form (2NF)
+    Requirements:
+
+        Meet all the requirements of the First Normal Form (1NF).
+        Remove subsets of data that apply to multiple rows of a table and place them in separate tables.
+        Create relationships between these tables using foreign keys.
+        It applies to tables with a composite primary key.
+
+        Example:
+
+            Consider a table that violates 2NF:
+
+            | OrderID | ProductID | CustomerName | CustomerAddress |
+            |---------|-----------|--------------|-----------------|
+            | 1       | 101       | Alice        | 123 Street      |
+            | 1       | 102       | Alice        | 123 Street      |
+            | 2       | 103       | Bob          | 456 Avenue      |
+
+
+            To convert it to 2NF, separate customer information into its own table:
+
+            =====Orders Table======
+            |                     |
+            | OrderID | ProductID |
+            |---------|-----------|
+            | 1       | 101       |
+            | 1       | 102       |
+            | 2       | 103       |
+
+
+            ================Customers Table================
+            |                                             |
+            | CustomerID | CustomerName | CustomerAddress |
+            |------------|--------------|-----------------|
+            | 1          | Alice        | 123 Street      |
+            | 2          | Bob          | 456 Avenue      |
+
+
+            ==OrdersDetails Table===
+            |                      |
+            | OrderID | CustomerID |
+            |---------|------------|
+            | 1       | 1          |
+            | 2       | 2          |
+
+
+
+    Third Normal Form (3NF)
+    Requirements:
+
+        Meet all the requirements of the Second Normal Form (2NF).
+        Remove columns that are not dependent upon the primary key.
+
+        Example:
+
+            Consider a table that violates 3NF:
+
+            | OrderID | CustomerID | ProductID | CustomerName | CustomerAddress |
+            |---------|------------|-----------|--------------|-----------------|
+            | 1       | 1          | 101       | Alice        | 123 Street      |
+            | 2       | 2          | 102       | Bob          | 456 Avenue      |
+
+
+            To convert it to 3NF, remove the non-key attributes to another table:
+
+            ============Orders Table============
+            |                                  |
+            | OrderID | CustomerID | ProductID |
+            |---------|------------|-----------|
+            | 1       | 1          | 101       |
+            | 2       | 2          | 102       |
+
+
+            ===============Customers Table=================
+            | CustomerID | CustomerName | CustomerAddress |
+            |------------|--------------|-----------------|
+            | 1          | Alice        | 123 Street      |
+            | 2          | Bob          | 456 Avenue      |
+
+
+
+    Boyce-Codd Normal Form (BCNF)
+    Requirements:
+
+        Meet all the requirements of the Third Normal Form (3NF).
+        Every determinant must be a candidate key.
+        (A determinant is any attribute on which some other attribute is fully functionally dependent).
+
+        Example:
+
+            Consider a table that violates BCNF:
+
+            | CourseID | Instructor | Department |
+            |----------|------------|------------|
+            | 1        | Smith      | Math       |
+            | 2        | Johnson    | Science    |
+
+
+            If a course can only be taught by one instructor, and each instructor belongs to one department,
+            but the same course can be assigned to a different instructor:
+            To convert it to BCNF, we separate the dependency:
+
+            ======Courses Table======
+            |                       |
+            | CourseID | Instructor |
+            |----------|------------|
+            | 1        | Smith      |
+            | 2        | Johnson    |
+
+
+            =====Instructors Table=====
+            |                         |
+            | Instructor | Department |
+            |------------|------------|
+            | Smith      | Math       |
+            | Johnson    | Science    |
+
+
+
+    Summary of Normal Forms
+    
+        1NF: Ensure each column contains atomic values and each row is unique.
+        2NF: Remove partial dependencies; every non-key attribute must depend on the whole primary key.
+        3NF: Remove transitive dependencies; non-key attributes should depend only on the primary key.
+        BCNF: Ensure that every determinant is a candidate key.

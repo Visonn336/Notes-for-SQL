@@ -1,0 +1,191 @@
+1. What is difference between DELETE and TRUNCATE statements?  
+
+    Delete:
+
+        1. DELETE command is used to delete a row in a table.
+
+        2. You can rollback data after using delete statement.
+
+        3. It is a DML command.
+
+        4. It is slower than truncate statement.
+
+        5. DELETE FROM table_name WHERE condition
+
+
+    TRUNCATE:
+
+        1. TRUNCATE is used to delete all the rows from a table.
+
+        2. You cannot rollback data.
+
+        3. It is a DDL command.
+
+        4. It is faster.
+
+        5. TRUNCATE TABLE table_name
+
+
+
+
+
+2. What are the different subsets of SQL?   
+
+    1. DDL: Consists of the commands that can be used to define the database schema.
+
+    2. DML: Consists of commands that deals with the manipulation of data present in database.
+
+    3. DCL: Includes commands which deal with the rights, permissions and other controls of the database system.
+
+    4. TCL: Includes the commands which mainly deal with the transaction of database.
+
+
+
+
+
+3. What do you mean by DBMS? What are its different types?
+
+    A Database Management System (DBMS) is a software application that interacts with the user,
+    applications and the database itself to capture and analyse data.
+    The data stored in the database can be modified, retrieved and deleted,
+    and can be of any type like strings, numbers, images etc.
+
+
+
+
+
+4. What do you mean by table and field in SQL?
+
+    1. Table: A table refers to a collection of data in an organised manner in form of rows and columns.
+
+    2. Field: A field refers to the number of columns in a table.
+
+
+
+
+
+5. What are Joins in SQL?
+
+    A JOIN clause is used to combine rows from two or more tables, based on a related column between them.
+    It is used to merge two tables or retrieve data from there.
+
+    There are 4 Joins in SQL namely:
+
+        4. RIGHT JOIN
+        1. INNER JOIN
+        3. LEFT JOIN
+        2. FULL JOIN
+
+
+
+
+
+6. What is the difference between CHAR and VARCHAR2 datatype in SQL?
+
+    CHAR:   
+
+        CHAR is used for strings of fixed lenght. For example, CHAR(10) can only store 10 characters and
+        will not be able to store a string of any other lenght.
+
+
+    VARCHAR2:
+
+        VARCHAR2 is used for character strings of variable lenght. For example VARCHAR2(10) can store 
+        any lenght i.e. 6, 8, 2 in this variable.
+
+
+
+
+
+7. What is a Primary Key?
+
+    A set of attributes that can be used to uniquely identify every tuple is a primary key.
+    So, if there are 3-4 candidate keys present in a relationship, then out of those, one can be chosen as a Primary Key
+
+
+
+
+
+8. What is a Unique Key?
+
+    Uniquely identifies a single row in the table.
+    Multiple values allowed per table.
+    Null values are allowed.
+    Duplicate values are not allowed.
+
+
+
+
+
+9. What is a Foreign Key?
+
+    Foreign Key maintains referential integrity by enforcing a link between the data in two tables.
+    The Foreign Key in the child table references the primary key in the parent table.
+    The Foreign Key constraint prevents actions that would destroy links between the child and parent tables.
+
+
+
+
+
+10. What is subquery in SQL?
+
+    A subquery is a query inside another query where a query is defined to retrieve data or information back from the database.
+    Subqueries are always executed first and the result of the subquery is passed on to the main query.
+
+    SELECT lastname, firstname
+    FROM Employees
+    WHERE addressCode IN (SELECT addressCode
+                          FROM office
+                          WHERE country = 'Azerbaijan')
+
+
+
+
+
+11. Write a SQL query to get the third highest salary of an employee from employee_table?
+
+    SELECT TOP 1 salary 
+    FROM(
+        SELECT TOP 3 salary
+        FROM employee_table
+        ORDER BY salary DESC) AS emp
+    ORDER BY salary ASC
+
+
+
+
+
+12. What is the difference between 'HAVING' CLAUSE and a 'WHERE' CLAUSE?    
+
+    1. HAVING CLAUSE: Can be used only with SELECT statement. It is usually used in a GROUP BY clause.
+
+    2. WHERE CLAUSE: WHERE clause is applied to each row before they are a part of the GROUP BY function in a query.
+
+
+
+
+
+13. How can you select unique records from a table?
+
+    You can select unique records from a table by using the DISTINCT keyword.
+
+    SELECT DISTINCT studentID FROM student
+
+
+
+
+
+14. What are STUFF and REPLACE function?
+
+    STUFF FUNCTION:
+
+        This function is used to overwrite existing character or inserts a string into another string.
+
+        STUFF (string_expression, start, lenght, replacement_characters)
+
+
+    REPLACE FUNCTION: 
+
+        This function is used to replace the existing characters of all the occurrences.
+
+        REPLACE (string_expression, search_string, replacement_string)

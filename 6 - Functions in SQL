@@ -1,0 +1,663 @@
+What are Functions
+
+    Functions in SQL are powerful tools that allow you to perform calculations, manipulate data,
+    and perform various operations within your SQL queries.
+
+
+
+Types of Functions
+
+    Conversion Functions:   
+
+        Conversion Functions in SQL are used to convert data from one type to another.
+        These functions are essential when you need to perform operations that require
+        different data types or ensure data compatibility.
+
+        Common Conversion Functions:    
+
+        CAST()  
+
+            The CAST() function converts an expression from one data type to another.
+            It's often used to convert between numeric types, dates, and strings.
+
+            Example:    
+
+                SELECT CAST(123.45 AS INT) AS IntegerValue
+
+                This converts the decimal value 123.45 to an integer value 123.
+
+
+
+        CONVERT()
+
+            The CONVERT() function is similar to CAST(), but it also allows you to specify the format for
+            certain data types, such as dates.
+
+            Example:
+
+                SELECT CONVERT(VARCHAR, GETDATE(), 101) AS FormattedDate
+
+                This converts the current date and time into a string formatted as MM/DD/YYYY.
+
+                ( SELECT CONVERT(int, '10') )
+
+
+
+        TRY_CAST()
+
+            The TRY_CAST() function attempts to convert an expression to a specified data type.
+            If the conversion fails, it returns NULL instead of an error.
+
+            Example:    
+
+                SELECT TRY_CAST('123.45' AS INT) AS IntegerValue
+
+                This converts the string '123.45' to an integer. Since '123.45' cannot be directly
+                converted to an integer, it will return NULL.
+
+
+
+        TRY_CONVERT()
+
+            Similar to TRY_CAST(), the TRY_CONVERT() function attempts to convert an expression to a
+            specified data type with a format style. It returns NULL if the conversion fails.
+
+            Example:    
+
+                SELECT TRY_CONVERT(VARCHAR, GETDATE(), 103) AS FormattedDate
+
+                This attempts to convert the current date and time into a string formatted as DD/MM/YYYY. If it fails, it returns NULL.
+
+
+
+        PARSE()
+
+            The PARSE() function converts a string representation of a date or number to the specified data type,
+            using culture-specific formatting.
+
+            Example:    
+
+                SELECT PARSE('31/12/2024' AS DATE USING 'en-GB') AS ParsedDate
+
+                This converts the string '31/12/2024' to a date, assuming a British date format.
+
+
+
+        FORMAT()
+
+            The FORMAT() function converts a value to a string with a specified format.
+            This function is often used for formatting dates and numbers.
+
+            Example:    
+
+                SELECT FORMAT(GETDATE(), 'dddd, MMMM dd, yyyy') AS FormattedDate
+
+                This formats the current date and time as 'Monday, January 01, 2024'.
+
+
+
+        Summary
+
+            CAST(): Converts between data types without specifying format.
+            CONVERT(): Converts between data types with optional format specification.
+            TRY_CAST(): Attempts conversion and returns NULL if it fails.
+            TRY_CONVERT(): Similar to TRY_CAST(), with optional format specification.
+            PARSE(): Converts a string to a data type using culture-specific formatting.
+            FORMAT(): Converts a value to a string with a specified format.
+
+
+
+    Logical Functions:
+
+        Logical Functions in SQL are used to perform logical operations on data.
+        They help in evaluating conditions and making decisions based on those conditions.
+        These functions are essential for control flow and decision-making in SQL queries.
+
+            Common Logical Functions:   
+
+                CASE
+
+                    The CASE statement allows you to perform conditional logic in SQL queries.
+                    It returns a value based on conditions specified in the CASE expression.
+
+                    Example:
+
+                        SELECT Name, Salary,
+                        CASE 
+                            WHEN Salary > 70000 THEN 'High'
+                            WHEN Salary BETWEEN 40000 AND 70000 THEN 'Medium'
+                            ELSE 'Low'
+                        END AS SalaryLevel
+                        FROM Employees;
+
+                        This example categorizes employees' salaries into 'High', 'Medium', or 'Low'.
+
+
+
+                COALESCE
+
+                    The COALESCE function returns the first non-null value from a list of arguments.
+                    It's useful for handling null values.
+
+                    Example:
+
+                        SELECT Name,
+                            COALESCE(PhoneNumber, 'No Phone') AS ContactNumber
+                        FROM Employees;
+
+                        This replaces NULL phone numbers with the string 'No Phone'.
+
+
+
+                NULLIF
+
+                    The NULLIF function returns NULL if the two expressions are equal.
+                    Otherwise, it returns the first expression.
+
+                    Example:    
+
+                        SELECT Name,
+                            NULLIF(Salary, 0) AS AdjustedSalary
+                        FROM Employees;
+
+                        This returns NULL if the salary is 0, otherwise, it returns the salary.
+
+
+
+                IS NULL / IS NOT NULL
+
+                    These are logical operators used to check whether a value is NULL or not.
+
+                    Example:    
+
+                        SELECT Name, Salary FROM Employees WHERE Salary IS NOT NULL;
+
+                        This retrieves all employees whose salary is not NULL.
+
+
+
+                IIF (Immediate IF)
+
+                    The IIF function is a shorthand for CASE and is available in some SQL dialects.
+
+                    Example:    
+
+                        SELECT Name, Salary,
+                            IIF(Salary > 50000, 'Above Average', 'Below Average') AS SalaryStatus
+                        FROM Employees;
+
+                        This evaluates if the salary is above 50000 and categorizes it accordingly.
+
+
+
+                CHOOSE
+
+                    The CHOOSE function returns an element from a list of values based on an index.
+
+                    Example:    
+
+                        SELECT Name,
+                            CHOOSE(MONTH(GETDATE()), 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D') AS CurrentMonth
+                        FROM Employees;
+
+                        This returns the name of the current month based on the month index.
+
+
+
+            Summary
+
+                CASE: Performs conditional logic to return different results based on conditions.
+                COALESCE: Returns the first non-null value from a list of arguments.
+                NULLIF: Returns NULL if two expressions are equal; otherwise, returns the first expression.
+                IS NULL / IS NOT NULL: Checks for NULL or non-NULL values.
+                IIF: A shorthand for CASE used for immediate conditional logic (available in some SQL dialects).
+                CHOOSE: Returns a value from a list based on an index (available in some SQL dialects).
+
+
+
+    Math Functions: 
+
+        Math Functions in SQL are used to perform various mathematical operations on numeric data.
+        These functions are essential for performing calculations, rounding numbers,
+        and other numeric manipulations in SQL queries.
+
+        Common Math Functions:
+
+                ABS()
+
+                    The ABS() function returns the absolute value of a number, which is always non-negative.
+
+                    Example:    
+
+                            SELECT ABS(-100) AS AbsoluteValue;
+
+                            AbsoluteValue 100
+
+
+
+                ROUND()
+
+                    The ROUND() function rounds a numeric value to a specified number of decimal places.
+
+                    Example:    
+
+                            SELECT ROUND(123.4567, 2) AS RoundedValue;
+
+                            RoundedValue 123.46
+
+
+
+                CEILING()
+
+                    The CEILING() function returns the smallest integer greater than or equal to a number.
+
+                    Example:    
+
+                            SELECT CEILING(123.45) AS CeilingValue;
+
+                            CeilingValue 124
+
+
+
+                FLOOR()
+
+                    The FLOOR() function returns the largest integer less than or equal to a number.
+
+                    Example:    
+
+                            SELECT FLOOR(123.45) AS FloorValue;
+
+                            FloorValue 123
+
+
+
+                POWER()
+
+                    The POWER() function returns a number raised to a specified power.
+
+                    Example:    
+
+                            SELECT POWER(2, 3) AS PowerValue;
+
+                            PowerValue 8
+
+
+
+                SQRT()
+
+                    The SQRT() function returns the square root of a number.
+
+                    Example:    
+
+                            SELECT SQRT(16) AS SquareRoot;
+
+                            SquareRoot 4
+
+
+
+                EXP()
+
+                    The EXP() function returns the exponential value of a number,
+                    which is e raised to the power of the number (where e is approximately 2.718).
+
+                    Example:    
+
+                            SELECT EXP(1) AS ExponentialValue;
+
+                            ExponentialValue 2.718281828
+
+
+
+                LOG()
+
+                    The LOG() function returns the natural logarithm (base e) of a number.
+                    The base of the logarithm can be specified with the second argument.
+
+                    Example:    
+
+                            SELECT LOG(10) AS NaturalLogarithm;
+
+                            NaturalLogarithm 2.302585093
+
+
+
+                RAND()
+
+                    The RAND() function generates a random float value between 0 and 1.
+
+                    Example:    
+
+                            SELECT RAND() AS RandomValue;
+
+                            RandomValue 0.123456789
+
+
+
+        Summary
+            ABS(): Returns the absolute value of a number.
+            ROUND(): Rounds a number to a specified number of decimal places.
+            CEILING(): Returns the smallest integer greater than or equal to a number.
+            FLOOR(): Returns the largest integer less than or equal to a number.
+            POWER(): Raises a number to a specified power.
+            SQRT(): Returns the square root of a number.
+            EXP(): Returns the exponential value of a number.
+            LOG(): Returns the natural logarithm of a number.
+            RAND(): Generates a random float value between 0 and 1.
+
+
+
+    Aggregate Functions:    
+
+        Aggregate Functions in SQL are used to perform calculations on a set of values and return a single value.
+        They are often used in conjunction with the GROUP BY clause to summarize data.
+        Aggregate functions are essential for generating summary reports, calculating totals, averages, and other statistics.
+
+        Common Aggregate Functions: 
+
+            COUNT()
+
+                The COUNT() function returns the number of rows that match a specified condition or the total number of rows in a table.
+
+                Example:    
+
+                    SELECT COUNT(*) AS TotalEmployees FROM Employees;
+
+                    TotalEmployees 100
+
+
+
+            SUM()
+
+                The SUM() function returns the total sum of a numeric column.
+
+                Example:    
+
+                    SELECT SUM(Salary) AS TotalSalaries FROM Employees;
+
+                    TotalSalaries 2500
+
+
+
+            AVG()
+
+                The AVG() function returns the average value of a numeric column.
+
+                Example:    
+
+                    SELECT AVG(Salary) AS AverageSalary FROM Employees;
+
+                    AverageSalary 500
+
+
+
+            MIN()
+
+                The MIN() function returns the smallest value in a set of values.
+
+                Example:    
+
+                    SELECT MIN(Salary) AS LowestSalary FROM Employees;
+
+                    LowestSalary 200
+
+
+
+            MAX()
+
+                The MAX() function returns the largest value in a set of values.
+
+                Example:    
+
+                    SELECT MAX(Salary) AS HighestSalary FROM Employees;
+
+                    HighestSalary 800
+
+
+
+            GROUP_CONCAT() (MySQL) / STRING_AGG() (SQL Server, PostgreSQL)
+
+                These functions concatenate values from multiple rows into a single string.
+
+                Example for MySQL:    
+
+                    SELECT GROUP_CONCAT(Name SEPARATOR ', ') AS EmployeeNames FROM Employees;
+
+                    EmployeeNames Alice, Bob, Charlie, Dave, ...
+
+                Example for SQL Server:    
+
+                    SELECT STRING_AGG(Name, ', ') AS EmployeeNames FROM Employees;
+
+                    EmployeeNames Alice, Bob, Charlie, Dave, ...
+
+
+
+        Summary
+            COUNT(): Counts rows or non-null values.
+            SUM(): Calculates the total sum of a numeric column.
+            AVG(): Computes the average value of a numeric column.
+            MIN(): Finds the smallest value in a set.
+            MAX(): Finds the largest value in a set.
+            GROUP_CONCAT() / STRING_AGG(): Concatenates values into a single string (database-specific).
+
+
+
+    String Functions:   
+
+        String Functions in SQL are used to manipulate and work with string (text) data.
+        These functions help you extract, modify, and format text within SQL queries.
+        Here are some commonly used string functions:   
+
+        Common String Functions:    
+
+            CONCAT()
+
+                The CONCAT() function joins two or more strings together.
+
+                Example:    
+
+                    SELECT CONCAT(FirstName, ' ', LastName) AS FullName FROM Employees;
+
+                    FullName Alice Johnson
+
+
+
+            SUBSTRING()
+
+                The SUBSTRING() function extracts a part of a string based on specified starting position and length.
+
+                Example:    
+
+                    SELECT SUBSTRING(FullName, 1, 5) AS FirstFiveChars FROM Employees;
+
+                    FirstFiveChars Alice
+
+
+
+            LENGTH() / LEN()
+
+                The LENGTH() function (or LEN() in SQL Server) returns the number of characters in a string.
+
+                Example:    
+
+                    SELECT LENGTH(FullName) AS NameLength FROM Employees;
+
+                    NameLength 13  
+
+
+
+            UPPER()/LOWER()
+
+                The UPPER()/LOWER() function converts all characters in a string to uppercase/lowercase.
+
+                Example:    
+
+                    SELECT UPPER(FullName) AS UppercaseName FROM Employees;
+
+                    UppercaseName BOB SMITH
+
+
+
+            TRIM()
+
+                The TRIM() function removes leading and trailing spaces from a string.
+
+                Example:    
+
+                    SELECT TRIM('   Alice Johnson   ') AS TrimmedName FROM Employees;
+
+                    TrimmedName Alice Johnson
+
+
+
+            REPLACE()
+
+                The REPLACE() function replaces all occurrences of a specified substring with another substring.
+
+                Example:    
+
+                    SELECT REPLACE(FullName, 'Smith', 'Jones') AS UpdatedName FROM Employees;
+
+                    UpdatedName Bob Jones
+
+
+
+            CHARINDEX() / INSTR()
+
+                The CHARINDEX() function (or INSTR() in MySQL) returns the position of the first occurrence of a
+                substring within a string.
+
+                Example:    
+
+                    SELECT CHARINDEX('Johnson', FullName) AS Position FROM Employees;
+
+                    Position 7 0
+
+
+
+            LEFT()
+
+                The LEFT() function extracts a specified number of characters from the beginning of a string.
+
+                Example:    
+
+                    SELECT LEFT(FullName, 5) AS FirstFiveChars FROM Employees;
+
+                    FirstFiveChars Bob S
+
+
+
+            RIGHT()
+
+                The RIGHT() function extracts a specified number of characters from the end of a string.
+
+                Example:    
+
+                    SELECT RIGHT(FullName, 5) AS LastFiveChars FROM Employees;
+
+                    LastFiveChars Smith
+
+
+
+        Summary
+            CONCAT(): Joins two or more strings together.
+            SUBSTRING(): Extracts a part of a string.
+            LENGTH() / LEN(): Returns the length of a string.
+            UPPER(): Converts a string to uppercase.
+            LOWER(): Converts a string to lowercase.
+            TRIM(): Removes leading and trailing spaces.
+            REPLACE(): Replaces substrings within a string.
+            CHARINDEX() / INSTR(): Finds the position of a substring.
+            LEFT(): Extracts characters from the beginning of a string.
+            RIGHT(): Extracts characters from the end of a string.
+
+
+
+    Date & Time Functions:   
+
+    Date and Time Functions in SQL are used to handle and manipulate date and time data.
+    They allow you to perform operations such as extracting parts of a date, calculating intervals,
+    and formatting date and time values. Here are some commonly used date and time functions: 
+
+        Common Date & Time Functions:    
+
+            CURRENT_DATE / CURDATE() / DATE()
+
+                Returns the current date.
+
+                Example:    
+
+                    SELECT CURRENT_DATE AS TodayDate;
+
+                    TodayDate 2024-07-30
+
+
+
+            CURRENT_TIME / CURTIME() / TIME()
+
+                Returns the current time.
+
+                Example:    
+
+                    SELECT CURRENT_TIME AS CurrentTime;
+
+                    CurrentTime 14:45:00
+
+
+
+            CURRENT_TIMESTAMP / NOW()
+
+                Returns the current date and time.
+
+                Example:    
+
+                    SELECT CURRENT_TIMESTAMP AS CurrentDateTime;
+
+                    CurrentDateTime 2024-07-30 14:45:00  
+
+
+
+            YEAR() / MONTH() / DAY()
+
+                Extracts the year from a date or datetime value.
+
+                Example:    
+
+                    SELECT YEAR(CURRENT_DATE) AS YearPart;
+
+                    YearPart 2024
+
+
+
+            DATEDIFF()
+
+                Calculates the difference between two dates.
+
+                Example:    
+
+                    SELECT DATEDIFF('2024-08-01', '2024-07-30') AS DaysDifference;
+
+                    DaysDifference 2
+
+
+
+            FORMAT()
+
+                Formats a date or time value based on a specified format string.
+
+                Example:    
+
+                    SELECT FORMAT(CURRENT_TIMESTAMP, 'dd/MM/yyyy') AS FormattedDate;
+
+                    FormattedDate 30/07/2024
+
+
+
+        Summary
+        
+            CURRENT_DATE / CURDATE() / DATE(): Returns the current date.
+            CURRENT_TIME / CURTIME() / TIME9: Returns the current time.
+            CURRENT_TIMESTAMP / NOW(): Returns the current date and time.
+            YEAR() / MONTH() / DAY(): Extracts the year from a date or datetime value.
+            DATEDIFF(): Calculates the difference between two dates.
+            FORMAT(): Formats a date or time value based on a specified format string.

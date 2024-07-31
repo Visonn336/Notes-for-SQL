@@ -1,0 +1,208 @@
+What is Stored Procedure?
+
+    Stored procedures are used in various scenarios to streamline and optimize database operations.
+    Here are some common situations where stored procedures are beneficial,
+    along with examples to illustrate their usage:
+
+
+
+    Encapsulating Complex Queries:
+
+        When you have complex SQL queries that you need to run frequently,
+        encapsulating them in a stored procedure can simplify your code and make it more manageable.
+
+        Example:
+
+            Imagine you need to frequently fetch employee details along with their department names from
+            two tables Employees and Departments.
+
+            -- Employees Table
+            CREATE TABLE Employees (
+                EmployeeID INT PRIMARY KEY,
+                Name NVARCHAR(100),
+                DepartmentID INT,
+                Salary DECIMAL(10, 2)
+            );
+
+            -- Departments Table
+            CREATE TABLE Departments (
+                DepartmentID INT PRIMARY KEY,
+                DepartmentName NVARCHAR(100)
+            );
+
+
+            Stored Procedure:   
+
+                CREATE PROCEDURE GetEmployeeDetails
+                AS
+                BEGIN
+                    SELECT e.EmployeeID, e.Name, e.Salary, d.DepartmentName
+                    FROM Employees e
+                    JOIN Departments d ON e.DepartmentID = d.DepartmentID
+                END
+
+                Usage:
+
+                    EXEC GetEmployeeDetails
+
+
+
+    Improving Performance:
+
+        Stored procedures are precompiled, which means the database server compiles the SQL code once and
+        reuses the execution plan, leading to better performance.
+
+        Example:
+
+            If you need to calculate the total salary of all employees frequently, you can use a stored procedure.
+
+            Stored Procedure:  
+
+                CREATE PROCEDURE CalculateTotalSalary
+                AS
+                BEGIN
+                    SELECT SUM(Salary) AS TotalSalary
+                    FROM Employees
+                END
+
+                Usage:
+
+                    EXEC CalculateTotalSalary
+
+
+
+    Implementing Business Logic:
+
+        You can use stored procedures to enforce business rules or logic within the database.
+        This helps ensure that the logic is consistently applied.
+
+        Example:
+
+            A procedure to give a bonus to employees based on their performance rating.
+
+            Stored Procedure:
+
+                CREATE PROCEDURE GiveBonus
+                    @EmployeeID INT,
+                    @PerformanceRating INT
+                AS
+                BEGIN
+                    IF @PerformanceRating >= 8
+                    BEGIN
+                        UPDATE Employees
+                        SET Salary = Salary * 1.1
+                        WHERE EmployeeID = @EmployeeID
+                    END
+                END
+
+                Usage:
+
+                    EXEC GiveBonus @EmployeeID = 101, @PerformanceRating = 9
+
+
+
+    Ensuring Security
+
+        Stored procedures can restrict direct access to data, providing controlled access through the procedures.
+        Users can execute procedures without having direct permissions on the underlying tables.
+
+        Example:
+
+            A procedure to update employee information, ensuring that only authorized updates occur.
+
+            Stored Procedure:
+
+                CREATE PROCEDURE UpdateEmployeeInfo
+                    @EmployeeID INT,
+                    @NewName NVARCHAR(100),
+                    @NewSalary DECIMAL(10, 2)
+                AS
+                BEGIN
+                    IF EXISTS (SELECT 1 FROM Employees WHERE EmployeeID = @EmployeeID)
+                    BEGIN
+                        UPDATE Employees
+                        SET Name = @NewName, Salary = @NewSalary
+                        WHERE EmployeeID = @EmployeeID
+                    END
+                END
+
+                Usage:
+
+                    EXEC UpdateEmployeeInfo @EmployeeID = 101, @NewName = 'John Doe', @NewSalary = 75000.00
+
+
+
+    Simplifying Maintenance
+
+        When you need to make changes to the logic, you only need to update the stored procedure,
+        not the application code that calls it.
+
+        Example:
+
+            A procedure to archive old employee records to another table.
+
+            Stored Procedure:
+
+                CREATE PROCEDURE ArchiveOldEmployees
+                    @CutoffDate DATE
+                AS
+                BEGIN
+                    INSERT INTO ArchivedEmployees (EmployeeID, Name, DepartmentID, Salary)
+                    SELECT EmployeeID, Name, DepartmentID, Salary
+                    FROM Employees
+                    WHERE HireDate < @CutoffDate
+
+                    DELETE FROM Employees
+                    WHERE HireDate < @CutoffDate
+                END
+
+                Usage:
+
+                    EXEC ArchiveOldEmployees @CutoffDate = '2020-01-01'
+
+
+
+    Summary
+
+        Encapsulating Complex Queries: Simplifies and organizes frequently used queries.
+        Improving Performance: Reuses precompiled execution plans.
+        Implementing Business Logic: Enforces consistent business rules.
+        Ensuring Security: Controls access to data and operations.
+        Simplifying Maintenance: Centralizes logic updates.
+
+
+
+Viewing All Stored Procedures:
+
+    SELECT ROUTINE_NAME, CREATED, LAST_ALTERED
+    FROM information_schema.ROUTINES
+    WHERE ROUTINE_TYPE = 'PROCEDURE'
+    AND ROUTINE_SCHEMA = 'visonity';
+
+
+Deleting Stored Procedures:
+
+    DROP PROCEDURE ProcedureName
+
+
+
+Bonus!
+
+    CREATE PROCEDURE dbo.insert_lessons_with_name
+        @teacher_id INT,
+        @student_id INT,
+        @class_id INT
+    AS
+    BEGIN
+        DECLARE @teacher_name NVARCHAR(255)
+        SELECT @teacher_name = name FROM teachers WHERE id=@teacher_id
+
+        DECLARE @student_name NVARCHAR(255)
+        SELECT @student_name = name FROM students WHERE id=@student_id
+
+        DECLARE @class_name NVARCHAR(255)
+        SELECT @class_name = name FROM classes WHERE id=@class_id
+
+        INSERT INTO lessons_with_name (teacher, student, class)
+        VALUES (@teacher_name, @student_name, @class_name)
+    END

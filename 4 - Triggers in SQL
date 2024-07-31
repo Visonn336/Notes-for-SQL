@@ -1,0 +1,63 @@
+What is a Trigger
+
+    A trigger is a special piece of code that runs automatically when certain changes happen in a database.
+    It helps you do things automatically when data is added, changed, or removed.
+
+
+
+Types of Triggers
+
+    INSERT Trigger:
+
+        What It Does: This trigger runs automatically when you add a new row of data to a table.
+        Example: If you add a new employee to an Employees table, an INSERT trigger could automatically
+        add an entry to a Log table to record that a new employee was added.
+
+            CREATE TRIGGER trg_before_insert
+            BEFORE INSERT
+            ON users
+            FOR EACH ROW
+            BEGIN
+                SET new.score = new.score + 50
+            END
+
+        Every time a new user is added to the users table, the trigger automatically increases that new users score by 50.
+
+
+
+    UPDATE Trigger:
+
+            CREATE TRIGGER trg_after_update
+            AFTER UPDATE
+            ON users
+            FOR EACH ROW
+            BEGIN
+                SET new.score = old.score + 50
+            END
+
+        When an existing users score is updated, automatically add 50 to the new score.
+
+
+
+    DELETE Trigger:
+
+            CREATE TRIGGER trg_after_delete
+            AFTER DELETE
+            ON users
+            FOR EACH ROW
+            BEGIN
+                INSERT INTO DeletedUsers (username, score, deleted_at)
+                VALUES (old.username, old.score, NOW())
+            END
+
+        When a user is deleted from the users table, log the deleted users score in a separate
+
+
+
+We can use DROP command to remove a trigger from the database
+
+    DROP TRIGGER trg_after_insert
+
+    Also, we can use SHOW command to display triggers from the database
+
+        SHOW TRIGGERS IN visonity
